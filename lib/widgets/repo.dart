@@ -1,4 +1,5 @@
 import 'package:app_for_github/models/repo_entity.dart';
+import 'package:app_for_github/services/navigation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
@@ -13,7 +14,7 @@ class RepoWidget extends StatelessWidget {
       padding: EdgeInsets.all(10),
       child: GestureDetector(
         onTap: () {
-            print(_repoEntity.name);
+          NavigationService().openIssuesPage(context, _repoEntity.name);
         },
         child: Container(
           color: Colors.blue[300],
@@ -21,13 +22,16 @@ class RepoWidget extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              Text(_repoEntity.name, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
+              Text(
+                _repoEntity.name,
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
               Text(_repoEntity.fullName),
               Text("User login: ${_repoEntity.owner}"),
-
             ],
           ),
-        ),),
+        ),
+      ),
     );
   }
 }

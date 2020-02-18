@@ -1,52 +1,29 @@
+class IssueEntity {
+  int issueNumber;
+  String title;
+  String body;
+  List<String> assignees;
+  List<String> labels;
 
+  IssueEntity(
+      {this.issueNumber, this.title, this.body, this.assignees, this.labels});
 
- class IssueEntity{
-
- final String title;
- final String body;
- final List<String> assignees;
- final int milestone;
- final List<String> labels;
-
-  IssueEntity({this.title, this.body, this.assignees, this.milestone,
-      this.labels});
-
- factory IssueEntity.fromJson(Map<String, dynamic> data) => new IssueEntity(
+  factory IssueEntity.fromJson(Map<String, dynamic> data) => new IssueEntity(
+      issueNumber: data["number"],
       title: data["title"],
       body: data["body"],
       assignees: getItemFromJson(data["assignees"], "login"),
-      milestone: data["milestone"],
-      labels: getItemFromJson(data["labels"], "name")
-     );
+      labels: getItemFromJson(data["labels"], "name"));
 
- static getItemFromJson(List<dynamic> maps, String arg){
-  return List.from(maps).map((item){
-   String name = item[arg];
-   return name;
-  }).toList();
- }
+  static getItemFromJson(List<dynamic> maps, String arg) {
+    return List.from(maps).map((item) {
+      String name = item[arg];
+      return name;
+    }).toList();
+  }
 
- @override
- String toString() {
-  return 'IssueEntity{title: $title, body: $body, assignees: $assignees, milestone: $milestone, labels: $labels}';
- }
-
- }
-
-
-
-
-
-
-
-//{
-//"title": "Found a bug",
-//"body": "I'm having a problem with this.",
-//"assignees": [
-//"octocat"
-//],
-//"milestone": 1,
-//"labels": [
-//"bug"
-//]
-//}
+  @override
+  String toString() {
+    return 'IssueEntity{number: $issueNumber, title: $title, body: $body, assignees: $assignees, labels: $labels}';
+  }
+}
