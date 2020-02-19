@@ -1,15 +1,20 @@
-
 import 'package:app_for_github/models/issue_entity.dart';
 import 'package:app_for_github/repositories/issue_entity_repository.dart';
 import 'package:app_for_github/services/navigation.dart';
+import 'package:app_for_github/widgets/error.dart';
+import 'package:app_for_github/widgets/indicator.dart';
 import 'package:app_for_github/widgets/issue.dart';
 import 'package:flutter/material.dart';
 
 class IssuesPage extends StatelessWidget {
+  final IssueEntityRepository _repository = IssueEntityRepository();
+  final NavigationService _service = NavigationService();
+  final String _repoName;
+
+  IssuesPage(this._repoName);
+
   @override
   Widget build(BuildContext context) {
-    final IssuesPageArguments arg = ModalRoute.of(context).settings.arguments;
-    final IssueEntityRepository _repository = IssueEntityRepository();
     return Scaffold(
       appBar: AppBar(
         title: Text("Issues"),
@@ -17,15 +22,14 @@ class IssuesPage extends StatelessWidget {
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.add),
-            iconSize: 20,
             onPressed: () {
-              NavigationService().openAddIssuesPage(context, arg.repoName);
+              _service.openAddIssuesPage(context, _repoName);
             },
           )
         ],
       ),
       body: FutureBuilder<List<IssueEntity>>(
-        future: _repository.getIssues(arg.repoName),
+        future: _repository.getIssues(_repoName),
         builder: _contentBuilder,
       ),
     );
@@ -41,17 +45,9 @@ class IssuesPage extends StatelessWidget {
             return IssueWidget(issues[index]);
           });
     } else if (snapshot.hasError) {
-      return Center(
-        child: Text("Error: ${snapshot.error}"),
-      );
+      return WidgetForError(snapshot);
     } else {
-      return Center(
-        child: SizedBox(
-          child: CircularProgressIndicator(),
-          height: 60,
-          width: 60,
-        ),
-      );
+      return CircularIndicator();
     }
   }
 }

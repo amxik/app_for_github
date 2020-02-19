@@ -2,83 +2,73 @@ import 'package:app_for_github/models/issue_entity.dart';
 import 'package:app_for_github/repositories/issue_entity_repository.dart';
 import 'package:app_for_github/services/navigation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 
-class AddIssuePage extends StatefulWidget {
-  @override
-  _AddIssuePageState createState() => _AddIssuePageState();
-}
+const double containerPadding = 10.0;
 
-class _AddIssuePageState extends State<AddIssuePage> {
+class AddIssuePage extends StatelessWidget {
+  final NavigationService _service = NavigationService();
+  final IssueEntityRepository _repository = IssueEntityRepository();
+  final IssueEntity newIssue = IssueEntity();
+  final String _repoName;
+
+  AddIssuePage(this._repoName);
+
   @override
   Widget build(BuildContext context) {
-    final IssuesPageArguments arg = ModalRoute.of(context).settings.arguments;
-    IssueEntity newIssue = IssueEntity();
     return Scaffold(
       appBar: AppBar(
         title: Text("Create issue"),
         centerTitle: true,
       ),
-      body: Column(
+      body: SingleChildScrollView(
+        child: Column(
+          children: <Widget>[
+            widgetWithTextField("Title"),
+            widgetWithTextField("Body"),
+            widgetWithTextField("Labels"),
+            widgetWithTextField("Assignees"),
+            Container(
+              child: RaisedButton(
+                color: Colors.blue,
+                child: Text("Create"),
+                onPressed: () async {
+                  int code = await _repository.addIssue(newIssue, _repoName);
+                  showAlertDialog(context, "Status code: $code");
+                },
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget widgetWithTextField(String fieldTitle) {
+    return Container(
+      padding: EdgeInsets.all(containerPadding),
+      child: Column(
         children: <Widget>[
-          Container(
-            child: Column(
-              children: <Widget>[
-                Text("Title"),
-                TextField(
-                  onChanged: (text) {
-                    newIssue.title = text;
-                  },
-                ),
-              ],
-            ),
+          Text(fieldTitle),
+          TextField(
+            onChanged: (text) {
+              switch (fieldTitle) {
+                case ("Title"):
+                  newIssue.title = text;
+                  break;
+                case ("Body"):
+                  newIssue.body = text;
+                  break;
+                case ("Labels"):
+                  newIssue.labels = text.split(" ");
+                  break;
+                case ("Assignees"):
+                  newIssue.assignees = text.split(" ");
+                  break;
+              }
+            },
+            decoration: InputDecoration(hintText: fieldTitle),
           ),
-          Container(
-            child: Column(
-              children: <Widget>[
-                Text("Body"),
-                TextField(
-                  onChanged: (text) {
-                    newIssue.body = text;
-                  },
-                ),
-              ],
-            ),
-          ),
-          Container(
-            child: Column(
-              children: <Widget>[
-                Text("Assignees"),
-                TextField(
-                  onChanged: (text) {
-                    newIssue.assignees = text.split(" ");
-                  },
-                ),
-              ],
-            ),
-          ),
-          Container(
-            child: Column(
-              children: <Widget>[
-                Text("Labels"),
-                TextField(
-                  onChanged: (text) {
-                    newIssue.labels = text.split(" ");
-                  },
-                ),
-              ],
-            ),
-          ),
-          Container(
-            child: RaisedButton(
-              color: Colors.blue,
-              child: Text("Create"),
-              onPressed: () async {
-                int code = await IssueEntityRepository()
-                    .addIssue(newIssue, arg.repoName);
-                showAlertDialog(context, "Status code: $code");
-              },
-            ),
-          )
         ],
       ),
     );
@@ -94,6 +84,7 @@ class _AddIssuePageState extends State<AddIssuePage> {
       builder: (context) {
         Future.delayed(Duration(seconds: 1), () {
           Navigator.of(context).pop(true);
+          _service.openIssuesPage(context, _repoName);
         });
         return alert;
       },

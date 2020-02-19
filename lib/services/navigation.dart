@@ -1,15 +1,9 @@
 import 'package:flutter/material.dart';
 
 class NavigationRoutes {
-  static final String repos = "/repos";
-  static final String issues = "/issues";
-  static final String addIssue = "/addIssue";
-}
-
-class IssuesPageArguments {
-  final String repoName;
-
-  const IssuesPageArguments(this.repoName);
+  static const String repos = "/repos";
+  static const String issues = "/issues";
+  static const String addIssue = "/addIssue";
 }
 
 class NavigationService {
@@ -20,12 +14,13 @@ class NavigationService {
   }
 
   openIssuesPage(BuildContext context, String repoName) {
-    final args = IssuesPageArguments(repoName);
-    Navigator.pushNamed(context, NavigationRoutes.issues, arguments: args);
+    Navigator.pushNamed(context, NavigationRoutes.issues, arguments: repoName);
   }
 
   openAddIssuesPage(BuildContext context, String repoName) {
-    final args = IssuesPageArguments(repoName);
-    Navigator.pushNamed(context, NavigationRoutes.addIssue, arguments: args);
+    Navigator.pushNamed(context, NavigationRoutes.addIssue, arguments: repoName);
   }
+
+
+
 }

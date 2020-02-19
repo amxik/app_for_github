@@ -1,7 +1,7 @@
 class UrlService {
   final String _endPoint = "https://api.github.com";
   final String _token =
-      "?access_token=c716240675a5f1b719e2eb06eac5a29a88a9faf4";
+      "?access_token=0260b58e64b747e0794f728cea1d1a05d7f763e4";
 
   String getReposUrl() {
     return "$_endPoint/users/amxik/repos$_token";

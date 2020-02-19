@@ -1,29 +1,34 @@
 class IssueEntity {
-  int issueNumber;
+  int number;
   String title;
   String body;
   List<String> assignees;
   List<String> labels;
 
   IssueEntity(
-      {this.issueNumber, this.title, this.body, this.assignees, this.labels});
+      {this.number, this.title, this.body, this.assignees, this.labels});
+
+  String get assigneesText => assignees?.join(", ") ?? "";
+
+  String get labelsText => labels?.join(", ") ?? "";
 
   factory IssueEntity.fromJson(Map<String, dynamic> data) => new IssueEntity(
-      issueNumber: data["number"],
+      number: data["number"],
       title: data["title"],
       body: data["body"],
-      assignees: getItemFromJson(data["assignees"], "login"),
-      labels: getItemFromJson(data["labels"], "name"));
+      assignees: getItemsFromTheMapByKey(data["assignees"], "login"),
+      labels: getItemsFromTheMapByKey(data["labels"], "name"));
 
-  static getItemFromJson(List<dynamic> maps, String arg) {
-    return List.from(maps).map((item) {
-      String name = item[arg];
-      return name;
-    }).toList();
+  static List<String> getItemsFromTheMapByKey(List<dynamic> maps, String key) {
+    var items = maps?.map((mapElement) {
+      return mapElement[key].toString();
+    });
+    return items?.toList();
   }
 
   @override
   String toString() {
-    return 'IssueEntity{number: $issueNumber, title: $title, body: $body, assignees: $assignees, labels: $labels}';
+    return 'IssueEntity{number: $number, title: $title,'
+        ' body: $body, assignees: $assignees, labels: $labels}';
   }
 }

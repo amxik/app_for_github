@@ -1,11 +1,11 @@
 class RepoEntity {
-  String name;
-  String fullName;
-  String owner;
+ final String name;
+ final String fullName;
+ final String owner;
 
-  RepoEntity({this.name, this.fullName, this.owner});
+  RepoEntity._({this.name, this.fullName, this.owner});
 
-  factory RepoEntity.fromJson(Map<String, dynamic> data) => new RepoEntity(
+  factory RepoEntity.fromJson(Map<String, dynamic> data) => new RepoEntity._(
       name: data["name"],
       fullName: data["full_name"],
       owner: data["owner"]["login"]);

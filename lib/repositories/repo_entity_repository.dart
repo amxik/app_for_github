@@ -5,8 +5,10 @@ import 'package:http/http.dart' as http;
 import 'package:app_for_github/services/url.dart';
 
 class RepoEntityRepository {
+  final UrlService _urlService = UrlService();
+
   Future<List<RepoEntity>> getRepos() async {
-    String url = UrlService().getReposUrl();
+    String url = _urlService.getReposUrl();
 
     http.Response response = await http.get(url);
 

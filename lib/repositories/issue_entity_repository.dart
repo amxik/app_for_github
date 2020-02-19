@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:app_for_github/models/issue_entity.dart';
 
 class IssueEntityRepository {
-  UrlService _urlService = UrlService();
+  final UrlService _urlService = UrlService();
 
   Future<List<IssueEntity>> getIssues(String repoName) async {
     String url = _urlService.getIssuesUrl(repoName);
@@ -17,10 +17,10 @@ class IssueEntityRepository {
     }).toList();
   }
 
-  addIssue(IssueEntity issueEntity, String repoName) async {
+  Future<int> addIssue(IssueEntity issueEntity, String repoName) async {
     http.Response response = await http.post(_urlService.getIssuesUrl(repoName),
         body: json.encode({
-          "title": issueEntity.title,
+          "title": issueEntity.title ?? "New Issue",
           "body": issueEntity.body ?? "",
           "assignees": issueEntity.assignees ?? [],
           "labels": issueEntity.labels ?? []
