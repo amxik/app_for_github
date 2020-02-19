@@ -1,21 +1,24 @@
 import 'package:app_for_github/models/issue_entity.dart';
-import 'package:app_for_github/repositories/issue_entity_repository.dart';
-import 'package:app_for_github/services/navigation.dart';
+import 'package:app_for_github/api/issue_entity_api.dart';
+import 'package:app_for_github/services/dialog_service.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 
 const double containerPadding = 10.0;
 
 class AddIssuePage extends StatelessWidget {
-  final NavigationService _service = NavigationService();
-  final IssueEntityRepository _repository = IssueEntityRepository();
-  final IssueEntity newIssue = IssueEntity();
+  final IssueEntityApi _repository;
+  final DialogService _dialogService;
   final String _repoName;
 
-  AddIssuePage(this._repoName);
+  AddIssuePage(this._repoName, this._repository, this._dialogService);
 
   @override
   Widget build(BuildContext context) {
+    String title;
+    String body;
+    List<String> labels;
+    List<String> assignees;
+
     return Scaffold(
       appBar: AppBar(
         title: Text("Create issue"),
@@ -23,71 +26,76 @@ class AddIssuePage extends StatelessWidget {
       ),
       body: SingleChildScrollView(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
-            widgetWithTextField("Title"),
-            widgetWithTextField("Body"),
-            widgetWithTextField("Labels"),
-            widgetWithTextField("Assignees"),
+            Container(
+              child: Column(
+                children: <Widget>[
+                  Text("Title"),
+                  TextField(
+                    onChanged: (text) {
+                      title = text;
+                    },
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              child: Column(
+                children: <Widget>[
+                  Text("Body"),
+                  TextField(
+                    onChanged: (text) {
+                      body = text;
+                    },
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              child: Column(
+                children: <Widget>[
+                  Text("Assignees"),
+                  TextField(
+                    onChanged: (text) {
+                      assignees = text.split(" ");
+                    },
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              child: Column(
+                children: <Widget>[
+                  Text("Labels"),
+                  TextField(
+                    onChanged: (text) {
+                      labels = text.split(" ");
+                    },
+                  ),
+                ],
+              ),
+            ),
             Container(
               child: RaisedButton(
                 color: Colors.blue,
                 child: Text("Create"),
                 onPressed: () async {
-                  int code = await _repository.addIssue(newIssue, _repoName);
-                  showAlertDialog(context, "Status code: $code");
+                  IssueEntity issue = IssueEntity(
+                      title: title,
+                      body: body,
+                      labels: labels,
+                      assignees: assignees);
+                  IssueEntity newIssue =
+                      await _repository.addIssue(issue, _repoName);
+                  _dialogService.showDialogueAfterAddingIssue(
+                      context, newIssue.number);
                 },
               ),
             )
           ],
         ),
       ),
-    );
-  }
-
-  Widget widgetWithTextField(String fieldTitle) {
-    return Container(
-      padding: EdgeInsets.all(containerPadding),
-      child: Column(
-        children: <Widget>[
-          Text(fieldTitle),
-          TextField(
-            onChanged: (text) {
-              switch (fieldTitle) {
-                case ("Title"):
-                  newIssue.title = text;
-                  break;
-                case ("Body"):
-                  newIssue.body = text;
-                  break;
-                case ("Labels"):
-                  newIssue.labels = text.split(" ");
-                  break;
-                case ("Assignees"):
-                  newIssue.assignees = text.split(" ");
-                  break;
-              }
-            },
-            decoration: InputDecoration(hintText: fieldTitle),
-          ),
-        ],
-      ),
-    );
-  }
-
-  showAlertDialog(BuildContext context, String message) {
-    AlertDialog alert = AlertDialog(
-      title: Text(message),
-    );
-
-    showDialog(
-      context: context,
-      builder: (context) {
-        Future.delayed(Duration(seconds: 1), () {
-          Navigator.of(context).pop(true);
-          _service.openIssuesPage(context, _repoName);
-        });
-        return alert;
-      },
     );
   }
 }

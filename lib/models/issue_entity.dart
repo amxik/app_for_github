@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class IssueEntity {
   int number;
   String title;
@@ -24,6 +26,19 @@ class IssueEntity {
       return mapElement[key].toString();
     });
     return items?.toList();
+  }
+
+  static String toJson(IssueEntity issue) {
+    Map<String, dynamic> mapFromIssue = {
+      "title": issue?.title ?? "New Issue",
+      "body": issue?.body ?? "",
+      "labels": issue?.labels ?? [],
+      "assignees": issue?.assignees ?? [],
+    };
+
+    String jsonFromMap = json.encode(mapFromIssue);
+
+    return jsonFromMap;
   }
 
   @override

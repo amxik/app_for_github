@@ -7,20 +7,14 @@ class NavigationRoutes {
 }
 
 class NavigationService {
-  const NavigationService();
+  Future<void> openReposPage(BuildContext context) =>
+      Navigator.pushNamed(context, NavigationRoutes.repos);
 
-  openReposPage(BuildContext context) {
-    Navigator.pushNamed(context, NavigationRoutes.repos);
-  }
+  Future<void> openIssuesPage(BuildContext context, String repoName) =>
+      Navigator.pushNamed(context, NavigationRoutes.issues,
+          arguments: repoName);
 
-  openIssuesPage(BuildContext context, String repoName) {
-    Navigator.pushNamed(context, NavigationRoutes.issues, arguments: repoName);
-  }
-
-  openAddIssuesPage(BuildContext context, String repoName) {
-    Navigator.pushNamed(context, NavigationRoutes.addIssue, arguments: repoName);
-  }
-
-
-
+  Future<void> openAddIssuesPage(BuildContext context, String repoName) =>
+      Navigator.pushNamed(context, NavigationRoutes.addIssue,
+          arguments: repoName);
 }

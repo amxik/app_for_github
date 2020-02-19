@@ -25,10 +25,7 @@ class RepoWidget extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              Text(
-                _repoEntity.name,
-                style: Theme.of(context).textTheme.title
-              ),
+              Text(_repoEntity.name, style: Theme.of(context).textTheme.title),
               Text(_repoEntity.fullName),
               Text("User login: ${_repoEntity.owner}"),
             ],

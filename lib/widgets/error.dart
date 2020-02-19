@@ -7,8 +7,10 @@ class WidgetForError extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(snapshot.error);
+
     return Center(
-      child: Text("Error: ${snapshot.error}"),
+      child: Text("Please try again."),
     );
   }
 }

@@ -1,21 +1,22 @@
 class UrlService {
   final String _endPoint = "https://api.github.com";
   final String _token =
-      "?access_token=0260b58e64b747e0794f728cea1d1a05d7f763e4";
+      "?access_token=ad129d37eedbb12abc29a51f11c8b1c133b3ac4f";
+  final String login = "amxik";
 
   String getReposUrl() {
-    return "$_endPoint/users/amxik/repos$_token";
+    return "$_endPoint/users/$login/repos$_token";
   }
 
   String getOneRepoUrl(String repoName) {
-    return "$_endPoint/repos/amxik/$repoName$_token";
+    return "$_endPoint/repos/$login/$repoName$_token";
   }
 
   String getIssuesUrl(String repoName) {
-    return "$_endPoint/repos/amxik/$repoName/issues$_token";
+    return "$_endPoint/repos/$login/$repoName/issues$_token";
   }
 
   String getOneIssueUrl(String repoName, int issueNumber) {
-    return "$_endPoint/repos/amxik/$repoName/issues/$issueNumber$_token";
+    return "$_endPoint/repos/$login/$repoName/issues/$issueNumber$_token";
   }
 }
