@@ -48,9 +48,9 @@ class IssuesPage extends StatelessWidget {
               })
           : NoContentWidget("No Issues");
     } else if (snapshot.hasError) {
-      return WidgetForError(snapshot);
+      return AppErrorWidget(snapshot);
     } else {
-      return ProgressAppIndicator();
+      return IndicatorWidget();
     }
   }
 }

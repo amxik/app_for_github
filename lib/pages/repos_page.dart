@@ -37,9 +37,9 @@ class ReposPage extends StatelessWidget {
               })
           : NoContentWidget("No Repositories");
     } else if (snapshot.hasError) {
-      return WidgetForError(snapshot);
+      return AppErrorWidget(snapshot);
     } else {
-      return ProgressAppIndicator();
+      return IndicatorWidget();
     }
   }
 }

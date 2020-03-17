@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class NavigationRoutes {
-  static const String repos = "/repos";
+  static const String repos = "/";
   static const String issues = "/issues";
   static const String addIssue = "/addIssue";
 }

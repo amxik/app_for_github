@@ -1,11 +1,11 @@
 import 'dart:convert';
 
 class IssueEntity {
-  int number;
-  String title;
-  String body;
-  List<String> assignees;
-  List<String> labels;
+ final int number;
+ final String title;
+ final String body;
+ final List<String> assignees;
+ final List<String> labels;
 
   IssueEntity(
       {this.number, this.title, this.body, this.assignees, this.labels});

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-class WidgetForError extends StatelessWidget {
+class AppErrorWidget extends StatelessWidget {
   final AsyncSnapshot snapshot;
 
-  WidgetForError(this.snapshot);
+  AppErrorWidget(this.snapshot);
 
   @override
   Widget build(BuildContext context) {

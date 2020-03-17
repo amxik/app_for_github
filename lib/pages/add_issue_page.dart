@@ -1,25 +1,31 @@
 import 'package:app_for_github/models/issue_entity.dart';
 import 'package:app_for_github/api/issue_entity_api.dart';
-import 'package:app_for_github/services/dialog_service.dart';
 import 'package:flutter/material.dart';
 
 const double containerPadding = 10.0;
 
-class AddIssuePage extends StatelessWidget {
+class AddIssuePage extends StatefulWidget {
   final IssueEntityApi _repository;
-  final DialogService _dialogService;
   final String _repoName;
 
-  AddIssuePage(this._repoName, this._repository, this._dialogService);
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+
+  AddIssuePage(this._repoName, this._repository);
+
+  @override
+  _AddIssuePageState createState() => _AddIssuePageState();
+}
+
+class _AddIssuePageState extends State<AddIssuePage> {
+  String title;
+  String body;
+  List<String> labels;
+  List<String> assignees;
 
   @override
   Widget build(BuildContext context) {
-    String title;
-    String body;
-    List<String> labels;
-    List<String> assignees;
-
     return Scaffold(
+      key: widget._scaffoldKey,
       appBar: AppBar(
         title: Text("Create issue"),
         centerTitle: true,
@@ -28,54 +34,10 @@ class AddIssuePage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
-            Container(
-              child: Column(
-                children: <Widget>[
-                  Text("Title"),
-                  TextField(
-                    onChanged: (text) {
-                      title = text;
-                    },
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              child: Column(
-                children: <Widget>[
-                  Text("Body"),
-                  TextField(
-                    onChanged: (text) {
-                      body = text;
-                    },
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              child: Column(
-                children: <Widget>[
-                  Text("Assignees"),
-                  TextField(
-                    onChanged: (text) {
-                      assignees = text.split(" ");
-                    },
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              child: Column(
-                children: <Widget>[
-                  Text("Labels"),
-                  TextField(
-                    onChanged: (text) {
-                      labels = text.split(" ");
-                    },
-                  ),
-                ],
-              ),
-            ),
+            _getTextField("Title"),
+            _getTextField("Body"),
+            _getTextField("Labels"),
+            _getTextField("Assignees"),
             Container(
               child: RaisedButton(
                 color: Colors.blue,
@@ -86,10 +48,9 @@ class AddIssuePage extends StatelessWidget {
                       body: body,
                       labels: labels,
                       assignees: assignees);
-                  IssueEntity newIssue =
-                      await _repository.addIssue(issue, _repoName);
-                  _dialogService.showDialogueAfterAddingIssue(
-                      context, newIssue.number);
+                  IssueEntity newIssue = await widget._repository
+                      .addIssue(issue, widget._repoName);
+                  await _showInSnackBar(newIssue.number);
                 },
               ),
             )
@@ -97,5 +58,37 @@ class AddIssuePage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Widget _getTextField(String fieldTitle) {
+    return Container(
+      padding: EdgeInsets.all(containerPadding),
+      child: TextFormField(
+        onChanged: (text) {
+          switch (fieldTitle) {
+            case ("Title"):
+              title = text;
+              break;
+            case ("Body"):
+              body = text;
+              break;
+            case ("Labels"):
+              labels = text.split(" ");
+              break;
+            case ("Assignees"):
+              assignees = text.split(" ");
+              break;
+          }
+        },
+        decoration:
+            InputDecoration(hintText: fieldTitle, labelText: fieldTitle),
+      ),
+    );
+  }
+
+  Future<void> _showInSnackBar(int number) async {
+    ScaffoldFeatureController controller = widget._scaffoldKey.currentState.showSnackBar(new SnackBar(
+        content: Text(number != null ? "Issue #$number created" : "Error"),
+    duration: Duration(seconds: 1)));
   }
 }
